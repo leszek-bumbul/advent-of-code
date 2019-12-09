@@ -19,6 +19,6 @@ public class Edition2019Runner {
     @PostConstruct
     public void init() {
         log.info("Advent of code - edition 2019");
-        log.info("Task 1 solution: {}", task1Solver.solve());
+        task1Solver.execute();
     }
 }
