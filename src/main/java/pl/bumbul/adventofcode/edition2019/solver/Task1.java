@@ -1,4 +1,4 @@
-package pl.bumbul.adventofcode.edition2019.task1;
+package pl.bumbul.adventofcode.edition2019.solver;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -12,14 +12,15 @@ import java.util.function.LongUnaryOperator;
 
 @Component
 @Log4j2
-public class Task1Solver {
+public class Task1 implements Task {
 
     private ResourceLoader resourceLoader;
 
-    public Task1Solver(ResourceLoader resourceLoader) {
+    public Task1(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
 
+    @Override
     public void execute() {
         resourceLoader.load("task1.txt");
         log.info("Task 1 stage 1 solution: {}", solve(calculateRequiredFuel));

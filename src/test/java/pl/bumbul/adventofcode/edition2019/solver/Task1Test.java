@@ -1,4 +1,4 @@
-package pl.bumbul.adventofcode.edition2019.task1;
+package pl.bumbul.adventofcode.edition2019.solver;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +16,7 @@ public class Task1Test {
     private ResourceLoader resourceLoader;
 
     @InjectMocks
-    private Task1Solver task1Solver;
+    private Task1 task1;
 
     @Test
     public void testFuelCounterUpper() {
@@ -35,10 +35,10 @@ public class Task1Test {
     }
 
     private void assertFuelCounterUpper(long actualMass, long expectedFuel) {
-        assertEquals(expectedFuel, task1Solver.calculateRequiredFuel.applyAsLong(actualMass));
+        assertEquals(expectedFuel, task1.calculateRequiredFuel.applyAsLong(actualMass));
     }
 
     private void assertRocketEquationDoubleChecker(long actualMass, long expectedFuel) {
-        assertEquals(expectedFuel, task1Solver.calculateRequiredFuelWithItsMass(actualMass).longValue());
+        assertEquals(expectedFuel, task1.calculateRequiredFuelWithItsMass(actualMass).longValue());
     }
 }
