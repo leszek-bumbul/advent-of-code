@@ -13,7 +13,7 @@ import java.util.function.ObjIntConsumer;
 
 @Component
 @Log4j2
-public class Task2 implements Task {
+public class Day02The1202ProgramAlarm implements Task {
 
     private static final Integer OPCODE_STOP_PROGRAM = 99;
     private static final int NOUN = 1;
@@ -23,7 +23,7 @@ public class Task2 implements Task {
     private List<Integer> memory;
     private ResourceLoader resourceLoader;
 
-    public Task2(ResourceLoader resourceLoader) {
+    public Day02The1202ProgramAlarm(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
         setUpInstructions();
     }

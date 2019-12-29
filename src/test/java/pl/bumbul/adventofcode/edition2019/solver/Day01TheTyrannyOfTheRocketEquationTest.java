@@ -10,13 +10,13 @@ import pl.bumbul.adventofcode.edition2019.ResourceLoader;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
-public class Task1Test {
+public class Day01TheTyrannyOfTheRocketEquationTest {
 
     @Mock
     private ResourceLoader resourceLoader;
 
     @InjectMocks
-    private Task1 task1;
+    private Day01TheTyrannyOfTheRocketEquation day01TheTyrannyOfTheRocketEquation;
 
     @Test
     public void testFuelCounterUpper() {
@@ -35,10 +35,10 @@ public class Task1Test {
     }
 
     private void assertFuelCounterUpper(long actualMass, long expectedFuel) {
-        assertEquals(expectedFuel, task1.calculateRequiredFuel.applyAsLong(actualMass));
+        assertEquals(expectedFuel, day01TheTyrannyOfTheRocketEquation.calculateRequiredFuel.applyAsLong(actualMass));
     }
 
     private void assertRocketEquationDoubleChecker(long actualMass, long expectedFuel) {
-        assertEquals(expectedFuel, task1.calculateRequiredFuelWithItsMass(actualMass).longValue());
+        assertEquals(expectedFuel, day01TheTyrannyOfTheRocketEquation.calculateRequiredFuelWithItsMass(actualMass).longValue());
     }
 }

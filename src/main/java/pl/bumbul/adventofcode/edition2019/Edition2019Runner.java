@@ -12,8 +12,11 @@ public class Edition2019Runner {
 
     private List<Task> taskList;
 
-    public Edition2019Runner(Task task1, Task task2) {
-        this.taskList = List.of(task1, task2);
+    public Edition2019Runner(Task day01TheTyrannyOfTheRocketEquation, Task day02The1202ProgramAlarm, Task day03CrossedWires) {
+        this.taskList = List.of(
+                day01TheTyrannyOfTheRocketEquation,
+                day02The1202ProgramAlarm,
+                day03CrossedWires);
     }
 
     @PostConstruct

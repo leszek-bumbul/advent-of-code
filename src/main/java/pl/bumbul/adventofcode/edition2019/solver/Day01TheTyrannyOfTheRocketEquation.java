@@ -9,11 +9,11 @@ import java.util.function.LongUnaryOperator;
 
 @Component
 @Log4j2
-public class Task1 implements Task {
+public class Day01TheTyrannyOfTheRocketEquation implements Task {
 
     private ResourceLoader resourceLoader;
 
-    public Task1(ResourceLoader resourceLoader) {
+    public Day01TheTyrannyOfTheRocketEquation(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
 

@@ -15,13 +15,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
-public class Task2Test {
+public class Day02The1202ProgramAlarmTest {
 
     @Mock
     private ResourceLoader resourceLoader;
 
     @InjectMocks
-    private Task2 tested;
+    private Day02The1202ProgramAlarm tested;
 
     @Test
     public void testAddition() {
