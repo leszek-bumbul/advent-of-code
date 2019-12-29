@@ -1,6 +1,5 @@
 package pl.bumbul.adventofcode.edition2019.solver;
 
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import pl.bumbul.adventofcode.edition2019.ResourceLoader;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.function.ObjIntConsumer;
 
 @Component
 @Log4j2
@@ -20,7 +19,7 @@ public class Task2 implements Task {
     private static final int NOUN = 1;
     private static final int VERB = 2;
     private static final int PROGRAM_RESULT = 0;
-    private Map<Integer, BiConsumer<List<Integer>, Integer>> instructions;
+    private Map<Integer, ObjIntConsumer<ArrayList<Integer>>> instructions;
     private List<Integer> memory;
     private ResourceLoader resourceLoader;
 
@@ -53,10 +52,10 @@ public class Task2 implements Task {
     }
 
     List<Integer> runIntcodeProgram(int noun, int verb) {
-        List<Integer> localMemory = new ArrayList<>(memory);
+        ArrayList<Integer> localMemory = new ArrayList<>(memory);
         localMemory.set(NOUN, noun);
         localMemory.set(VERB, verb);
-        for (int index = 0; !OPCODE_STOP_PROGRAM.equals(localMemory.get(index)) ; index+=4) {
+        for (int index = 0; !OPCODE_STOP_PROGRAM.equals(localMemory.get(index)); index += 4) {
             instructions.get(localMemory.get(index)).accept(localMemory, index);
         }
         return localMemory;
@@ -67,17 +66,17 @@ public class Task2 implements Task {
     }
 
     private void setUpInstructions() {
-        BiConsumer<List<Integer>, Integer> codeSummator = (memory, instructionPointer) -> {
-            var addressOfFirstElement = memory.get(instructionPointer + 1);
-            var addressOfSecondElement = memory.get(instructionPointer + 2);
-            var addressOfResult = memory.get(instructionPointer + 3);
-            memory.set(addressOfResult, memory.get(addressOfFirstElement) + memory.get(addressOfSecondElement));
+        ObjIntConsumer<ArrayList<Integer>> codeSummator = (instruction, instructionPointer) -> {
+            var addressOfFirstElement = instruction.get(instructionPointer + 1);
+            var addressOfSecondElement = instruction.get(instructionPointer + 2);
+            var addressOfResult = instruction.get(instructionPointer + 3);
+            instruction.set(addressOfResult, instruction.get(addressOfFirstElement) + instruction.get(addressOfSecondElement));
         };
-        BiConsumer<List<Integer>, Integer> codeMultiplicator = (memory, instructionPointer) -> {
-            var indexFirstElement = memory.get(instructionPointer + 1);
-            var indexSecondElement = memory.get(instructionPointer + 2);
-            var indexResult = memory.get(instructionPointer + 3);
-            memory.set(indexResult, memory.get(indexFirstElement) * memory.get(indexSecondElement));
+        ObjIntConsumer<ArrayList<Integer>> codeMultiplicator = (instruction, instructionPointer) -> {
+            var indexFirstElement = instruction.get(instructionPointer + 1);
+            var indexSecondElement = instruction.get(instructionPointer + 2);
+            var indexResult = instruction.get(instructionPointer + 3);
+            instruction.set(indexResult, instruction.get(indexFirstElement) * instruction.get(indexSecondElement));
         };
         instructions = new HashMap<>(Map.of(1, codeSummator, 2, codeMultiplicator));
     }
