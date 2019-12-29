@@ -6,83 +6,80 @@ import org.springframework.stereotype.Component;
 import pl.bumbul.adventofcode.edition2019.ResourceLoader;
 import pl.bumbul.adventofcode.edition2019.Task;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 @Component
 @Log4j2
 public class Task2 implements Task {
 
-    private static final Integer CODE_STREAM_STOP = 99;
-    private final ResourceLoader resourceLoader;
-    private Map<Integer, Consumer<Integer>> codeProcessors;
+    private static final Integer OPCODE_STOP_PROGRAM = 99;
+    private static final int NOUN = 1;
+    private static final int VERB = 2;
+    private Map<Integer, BiConsumer<List<Integer>, Integer>> instructions;
 
     @Getter
-    private List<Integer> codeStream;
+    private List<Integer> memory;
+    private ResourceLoader resourceLoader;
 
     public Task2(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
-        this.codeProcessors = new HashMap<>(Map.of(1, this.codeSummator, 2, this.codeMultiplicator));
+        setUpInstructions();
     }
 
     @Override
     public void execute() {
-        resourceLoader.load("task2.txt");
+        initMemory();
         log.info("--- Day 2: 1202 Program Alarm ---");
-        log.info("Task 2 stage 1 solution: {}", solve());
+        log.info("Stage 1 solution: {}", runIntcodeProgram(12, 2));
+        log.info("Stage 2 solution: {}", findNounAndVerb(19690720));
     }
 
-    private Integer solve() {
-        readCodeSource();
-        inputDebugValues();
-        int index = 0;
-        while (!CODE_STREAM_STOP.equals(codeStream.get(index))) {
-            codeProcessors.get(codeStream.get(index)).accept(index);
-            index += 4;
+    void initMemory() {
+        memory = resourceLoader.loadFileWithEntriesSeparatedByPeriod("task2.txt");
+    }
+
+    private Integer findNounAndVerb(Integer expected) {
+        for (int noun = 0; noun < 100; noun++) {
+            for (int verb = 0; verb < 100; verb++) {
+                if (expected.equals(runIntcodeProgram(noun, verb))) {
+                    return opcode(noun, verb);
+                }
+            }
         }
-        return codeStream.get(0);
+        return -1;
     }
 
-    private void inputDebugValues() {
-        codeStream.set(1, 12);
-        codeStream.set(2, 2);
-    }
-
-    private void readCodeSource() {
-        try {
-            codeStream =
-                    Arrays.stream(String.join(",", Files.readAllLines(resourceLoader.getPath())).split(",", 0))
-                            .map(Integer::parseInt)
-                            .collect(Collectors.toList());
-
-        } catch (IOException e) {
-            log.error("File not found", e);
+    Integer runIntcodeProgram(int noun, int verb) {
+        List<Integer> localMemory = new ArrayList<>(memory);
+        localMemory.set(NOUN, noun);
+        localMemory.set(VERB, verb);
+        for (int index = 0; !OPCODE_STOP_PROGRAM.equals(localMemory.get(index)) ; index+=4) {
+            instructions.get(localMemory.get(index)).accept(localMemory, index);
         }
+        return localMemory.get(0);
     }
 
-    Consumer<Integer> codeSummator = index -> {
-        var indexFirstElement = codeStream.get(index + 1);
-        var indexSecondElement = codeStream.get(index + 2);
-        var indexResult = codeStream.get(index + 3);
-        codeStream.set(indexResult, codeStream.get(indexFirstElement) + codeStream.get(indexSecondElement));
-    };
-
-    Consumer<Integer> codeMultiplicator = index -> {
-        var indexFirstElement = codeStream.get(index + 1);
-        var indexSecondElement = codeStream.get(index + 2);
-        var indexResult = codeStream.get(index + 3);
-        codeStream.set(indexResult, codeStream.get(indexFirstElement) * codeStream.get(indexSecondElement));
-    };
-
-
-    void setTestCodeStream(List<Integer> testCodeStream) {
-        codeStream = new ArrayList<>(testCodeStream);
+    private Integer opcode(int noun, int verb) {
+        return 100 * noun + verb;
     }
 
-    void resetTestCodeStream() {
-        codeStream = new ArrayList<>();
+    private void setUpInstructions() {
+        BiConsumer<List<Integer>, Integer> codeSummator = (memory, instructionPointer) -> {
+            var addressOfFirstElement = memory.get(instructionPointer + 1);
+            var addressOfSecondElement = memory.get(instructionPointer + 2);
+            var addressOfResult = memory.get(instructionPointer + 3);
+            memory.set(addressOfResult, memory.get(addressOfFirstElement) + memory.get(addressOfSecondElement));
+        };
+        BiConsumer<List<Integer>, Integer> codeMultiplicator = (memory, instructionPointer) -> {
+            var indexFirstElement = memory.get(instructionPointer + 1);
+            var indexSecondElement = memory.get(instructionPointer + 2);
+            var indexResult = memory.get(instructionPointer + 3);
+            memory.set(indexResult, memory.get(indexFirstElement) * memory.get(indexSecondElement));
+        };
+        instructions = new HashMap<>(Map.of(1, codeSummator, 2, codeMultiplicator));
     }
 }

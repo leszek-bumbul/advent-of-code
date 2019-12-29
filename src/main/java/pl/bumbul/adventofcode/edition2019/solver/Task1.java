@@ -5,10 +5,6 @@ import org.springframework.stereotype.Component;
 import pl.bumbul.adventofcode.edition2019.ResourceLoader;
 import pl.bumbul.adventofcode.edition2019.Task;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.Optional;
 import java.util.function.LongUnaryOperator;
 
 @Component
@@ -23,22 +19,15 @@ public class Task1 implements Task {
 
     @Override
     public void execute() {
-        resourceLoader.load("task1.txt");
         log.info("--- Day 1: The Tyranny of the Rocket Equation ---");
-        log.info("Task 1 stage 1 solution: {}", solve(calculateRequiredFuel));
-        log.info("Task 1 stage 2 solution: {}", solve(this::calculateRequiredFuelWithItsMass));
+        log.info("Stage 1 solution: {}", solve(calculateRequiredFuel));
+        log.info("Stage 2 solution: {}", solve(this::calculateRequiredFuelWithItsMass));
     }
 
     private Long solve(LongUnaryOperator algorithm) {
-        Optional<Long> result = Optional.empty();
-        try {
-            result = Files.readAllLines(resourceLoader.getPath(), Charset.defaultCharset()).stream()
-                    .map(mass -> algorithm.applyAsLong(Long.parseLong(mass)))
-                    .reduce(Long::sum);
-        } catch (IOException e) {
-            log.error("File not found", e);
-        }
-        return result.orElseThrow();
+        return resourceLoader.loadFileWithOneEntryPerRow("task1.txt")
+                    .map(algorithm::applyAsLong)
+                    .reduce(0L, Long::sum);
     }
 
     LongUnaryOperator calculateRequiredFuel = mass -> ((long) Math.floor(1.0 * mass / 3)) - 2;

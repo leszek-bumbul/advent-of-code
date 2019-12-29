@@ -1,6 +1,5 @@
 package pl.bumbul.adventofcode.edition2019.solver;
 
-import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class Task2Test {
@@ -21,55 +22,52 @@ public class Task2Test {
 
     @InjectMocks
     private Task2 tested;
-    private List<Integer> codeStream;
-
-    @After
-    public void tearDown() {
-        tested.resetTestCodeStream();
-    }
 
     @Test
     public void testAddition() {
         // given
-        codeStream = new ArrayList<>(List.of(1, 0, 0, 0, 99));
+        ArrayList<Integer> integers = new ArrayList<>(List.of(1, 0, 0, 0, 99));
+        given(resourceLoader.loadFileWithEntriesSeparatedByPeriod(any()))
+                .willReturn(integers);
 
         var expectedCodeStream = List.of(2, 0, 0, 0, 99);
 
         // when
-        tested.setTestCodeStream(codeStream);
-        tested.codeSummator.accept(0);
+        tested.initMemory();
+        tested.runIntcodeProgram(0,0);
 
         // then
-        assertEquals(expectedCodeStream, tested.getCodeStream());
+        assertEquals(expectedCodeStream, tested.getMemory());
     }
 
     @Test
     public void testMultiplication() {
         // given
-        codeStream = new ArrayList<>(List.of(2, 3, 0, 3, 99));
+        given(resourceLoader.loadFileWithEntriesSeparatedByPeriod(any()))
+                .willReturn(new ArrayList<>(List.of(2, 3, 0, 3, 99)));
         var expectedCodeStream = List.of(2, 3, 0, 6, 99);
 
         // when
-        tested.setTestCodeStream(codeStream);
-        tested.codeMultiplicator.accept(0);
+        tested.initMemory();
+        tested.runIntcodeProgram(3,0);
 
         // then
-        assertEquals(expectedCodeStream, tested.getCodeStream());
+        assertEquals(expectedCodeStream, tested.getMemory());
     }
 
     @Test
     public void testAdditionWithMultiplication() {
         // given
-        codeStream = new ArrayList<>(List.of(1,1,1,4,99,5,6,0,99));
-        var expectedCodeStream = List.of(30,1,1,4,2,5,6,0,99);
+        given(resourceLoader.loadFileWithEntriesSeparatedByPeriod(any()))
+                .willReturn(new ArrayList<>(List.of(1, 1, 1, 4, 99, 5, 6, 0, 99)));
+        var expectedCodeStream = List.of(30, 1, 1, 4, 2, 5, 6, 0, 99);
 
         // when
-        tested.setTestCodeStream(codeStream);
-        tested.codeSummator.accept(0);
-        tested.codeMultiplicator.accept(4);
+        tested.initMemory();
+        tested.runIntcodeProgram(1,1);
 
         // then
-        assertEquals(expectedCodeStream, tested.getCodeStream());
+        assertEquals(expectedCodeStream, tested.getMemory());
     }
 
 }
