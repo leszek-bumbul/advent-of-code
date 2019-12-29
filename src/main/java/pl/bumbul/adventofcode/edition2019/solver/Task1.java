@@ -3,6 +3,7 @@ package pl.bumbul.adventofcode.edition2019.solver;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import pl.bumbul.adventofcode.edition2019.ResourceLoader;
+import pl.bumbul.adventofcode.edition2019.Task;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -23,6 +24,7 @@ public class Task1 implements Task {
     @Override
     public void execute() {
         resourceLoader.load("task1.txt");
+        log.info("--- Day 1: The Tyranny of the Rocket Equation ---");
         log.info("Task 1 stage 1 solution: {}", solve(calculateRequiredFuel));
         log.info("Task 1 stage 2 solution: {}", solve(this::calculateRequiredFuelWithItsMass));
     }
