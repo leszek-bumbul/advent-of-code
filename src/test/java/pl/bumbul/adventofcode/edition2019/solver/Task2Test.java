@@ -26,18 +26,17 @@ public class Task2Test {
     @Test
     public void testAddition() {
         // given
-        ArrayList<Integer> integers = new ArrayList<>(List.of(1, 0, 0, 0, 99));
         given(resourceLoader.loadFileWithEntriesSeparatedByPeriod(any()))
-                .willReturn(integers);
+                .willReturn(new ArrayList<>(List.of(1, 0, 0, 0, 99)));
 
         var expectedCodeStream = List.of(2, 0, 0, 0, 99);
+        tested.initMemory();
 
         // when
-        tested.initMemory();
-        tested.runIntcodeProgram(0,0);
+        var actualMemory = tested.runIntcodeProgram(0, 0);
 
         // then
-        assertEquals(expectedCodeStream, tested.getMemory());
+        assertEquals(expectedCodeStream, actualMemory);
     }
 
     @Test
@@ -46,13 +45,13 @@ public class Task2Test {
         given(resourceLoader.loadFileWithEntriesSeparatedByPeriod(any()))
                 .willReturn(new ArrayList<>(List.of(2, 3, 0, 3, 99)));
         var expectedCodeStream = List.of(2, 3, 0, 6, 99);
+        tested.initMemory();
 
         // when
-        tested.initMemory();
-        tested.runIntcodeProgram(3,0);
+        var actualMemory = tested.runIntcodeProgram(3, 0);
 
         // then
-        assertEquals(expectedCodeStream, tested.getMemory());
+        assertEquals(expectedCodeStream, actualMemory);
     }
 
     @Test
@@ -61,13 +60,13 @@ public class Task2Test {
         given(resourceLoader.loadFileWithEntriesSeparatedByPeriod(any()))
                 .willReturn(new ArrayList<>(List.of(1, 1, 1, 4, 99, 5, 6, 0, 99)));
         var expectedCodeStream = List.of(30, 1, 1, 4, 2, 5, 6, 0, 99);
+        tested.initMemory();
 
         // when
-        tested.initMemory();
-        tested.runIntcodeProgram(1,1);
+        var actualMemory = tested.runIntcodeProgram(1, 1);
 
         // then
-        assertEquals(expectedCodeStream, tested.getMemory());
+        assertEquals(expectedCodeStream, actualMemory);
     }
 
 }

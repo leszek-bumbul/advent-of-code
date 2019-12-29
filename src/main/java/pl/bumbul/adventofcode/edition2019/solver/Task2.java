@@ -19,9 +19,8 @@ public class Task2 implements Task {
     private static final Integer OPCODE_STOP_PROGRAM = 99;
     private static final int NOUN = 1;
     private static final int VERB = 2;
+    private static final int PROGRAM_RESULT = 0;
     private Map<Integer, BiConsumer<List<Integer>, Integer>> instructions;
-
-    @Getter
     private List<Integer> memory;
     private ResourceLoader resourceLoader;
 
@@ -34,7 +33,7 @@ public class Task2 implements Task {
     public void execute() {
         initMemory();
         log.info("--- Day 2: 1202 Program Alarm ---");
-        log.info("Stage 1 solution: {}", runIntcodeProgram(12, 2));
+        log.info("Stage 1 solution: {}", runIntcodeProgram(12, 2).get(PROGRAM_RESULT));
         log.info("Stage 2 solution: {}", findNounAndVerb(19690720));
     }
 
@@ -45,7 +44,7 @@ public class Task2 implements Task {
     private Integer findNounAndVerb(Integer expected) {
         for (int noun = 0; noun < 100; noun++) {
             for (int verb = 0; verb < 100; verb++) {
-                if (expected.equals(runIntcodeProgram(noun, verb))) {
+                if (expected.equals(runIntcodeProgram(noun, verb).get(0))) {
                     return opcode(noun, verb);
                 }
             }
@@ -53,14 +52,14 @@ public class Task2 implements Task {
         return -1;
     }
 
-    Integer runIntcodeProgram(int noun, int verb) {
+    List<Integer> runIntcodeProgram(int noun, int verb) {
         List<Integer> localMemory = new ArrayList<>(memory);
         localMemory.set(NOUN, noun);
         localMemory.set(VERB, verb);
         for (int index = 0; !OPCODE_STOP_PROGRAM.equals(localMemory.get(index)) ; index+=4) {
             instructions.get(localMemory.get(index)).accept(localMemory, index);
         }
-        return localMemory.get(0);
+        return localMemory;
     }
 
     private Integer opcode(int noun, int verb) {
