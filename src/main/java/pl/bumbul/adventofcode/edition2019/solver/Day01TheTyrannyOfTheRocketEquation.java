@@ -25,7 +25,7 @@ public class Day01TheTyrannyOfTheRocketEquation implements Task {
     }
 
     private Long solve(LongUnaryOperator algorithm) {
-        return resourceLoader.loadFileWithOneEntryPerRow("task1.txt")
+        return resourceLoader.loadFileWithOneEntryPerRow("Day01TheTyrannyOfTheRocketEquation.input")
                     .map(algorithm::applyAsLong)
                     .reduce(0L, Long::sum);
     }

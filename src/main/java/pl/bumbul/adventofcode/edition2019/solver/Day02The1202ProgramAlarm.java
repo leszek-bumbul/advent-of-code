@@ -18,7 +18,7 @@ public class Day02The1202ProgramAlarm implements Task {
     private static final Integer OPCODE_STOP_PROGRAM = 99;
     private static final int NOUN = 1;
     private static final int VERB = 2;
-    private static final int PROGRAM_RESULT = 0;
+    private static final int PROGRAM_RESULT_ADDRESS = 0;
     private Map<Integer, ObjIntConsumer<ArrayList<Integer>>> instructions;
     private List<Integer> memory;
     private ResourceLoader resourceLoader;
@@ -32,23 +32,29 @@ public class Day02The1202ProgramAlarm implements Task {
     public void execute() {
         initMemory();
         log.info("--- Day 2: 1202 Program Alarm ---");
-        log.info("Stage 1 solution: {}", runIntcodeProgram(12, 2).get(PROGRAM_RESULT));
+        log.info("Stage 1 solution: {}", runIntcodeProgram(12, 2).get(PROGRAM_RESULT_ADDRESS));
         log.info("Stage 2 solution: {}", findNounAndVerb(19690720));
     }
 
     void initMemory() {
-        memory = resourceLoader.loadFileWithEntriesSeparatedByPeriod("task2.txt");
+        memory = resourceLoader.loadFileWithEntriesSeparatedByPeriod("Day02The1202ProgramAlarm.input");
     }
 
     private Integer findNounAndVerb(Integer expected) {
-        for (int noun = 0; noun < 100; noun++) {
-            for (int verb = 0; verb < 100; verb++) {
+        var matchingPairIsFound = false;
+        int aNoun = 0;
+        int aVerb = 0;
+        for (int noun = 0; noun < 100 && !matchingPairIsFound; noun++) {
+            for (int verb = 0; verb < 100 && !matchingPairIsFound; verb++) {
                 if (expected.equals(runIntcodeProgram(noun, verb).get(0))) {
-                    return opcode(noun, verb);
+                    matchingPairIsFound = true;
+                    aNoun = noun;
+                    aVerb = verb;
                 }
+
             }
         }
-        return -1;
+        return opcode(aNoun, aVerb);
     }
 
     List<Integer> runIntcodeProgram(int noun, int verb) {
@@ -73,10 +79,10 @@ public class Day02The1202ProgramAlarm implements Task {
             instruction.set(addressOfResult, instruction.get(addressOfFirstElement) + instruction.get(addressOfSecondElement));
         };
         ObjIntConsumer<ArrayList<Integer>> codeMultiplicator = (instruction, instructionPointer) -> {
-            var indexFirstElement = instruction.get(instructionPointer + 1);
-            var indexSecondElement = instruction.get(instructionPointer + 2);
-            var indexResult = instruction.get(instructionPointer + 3);
-            instruction.set(indexResult, instruction.get(indexFirstElement) * instruction.get(indexSecondElement));
+            var addressFirstElement = instruction.get(instructionPointer + 1);
+            var addressSecondElement = instruction.get(instructionPointer + 2);
+            var addressResult = instruction.get(instructionPointer + 3);
+            instruction.set(addressResult, instruction.get(addressFirstElement) * instruction.get(addressSecondElement));
         };
         instructions = new HashMap<>(Map.of(1, codeSummator, 2, codeMultiplicator));
     }

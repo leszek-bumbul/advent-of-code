@@ -6,10 +6,10 @@ import pl.bumbul.adventofcode.edition2019.Task;
 
 @Component
 @Log4j2
-public class Day03CrossedWires implements Task {
-
+public class Day04SecureContainer implements Task {
     @Override
     public void execute() {
-        log.info("--- Day 3: Crossed Wires ---");
+        log.info("--- Day 4: Secure Container ---");
+
     }
 }
