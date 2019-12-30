@@ -8,10 +8,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,6 +16,7 @@ import java.util.stream.Stream;
 @Log4j2
 public class ResourceLoader {
 
+    private static final String FILE_NOT_FOUND = "File not found";
     private Path path;
 
     public void load(String fileName) {
@@ -32,7 +30,7 @@ public class ResourceLoader {
         try {
             result = Files.readAllLines(path).stream().map(Long::parseLong);
         } catch (IOException e) {
-            log.error("File not found", e);
+            log.error(FILE_NOT_FOUND, e);
         }
         return result;
     }
@@ -45,9 +43,20 @@ public class ResourceLoader {
                     .map(Integer::parseInt)
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            log.error("File not found", e);
+            log.error(FILE_NOT_FOUND, e);
         }
         return result;
     }
 
+    public Map<Integer, List<String>> loadFileWithInstructionsInEachRow(String fileName) {
+        load(fileName);
+        Map<Integer, List<String>> result = new HashMap<>();
+        try{
+            result.put(1, Arrays.asList(Files.readAllLines(path).get(0).split(",",0)) );
+            result.put(2, Arrays.asList(Files.readAllLines(path).get(1).split(",",0)) );
+        }catch (IOException e) {
+            log.error(FILE_NOT_FOUND, e);
+        }
+        return result;
+    }
 }
