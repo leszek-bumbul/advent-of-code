@@ -7,8 +7,12 @@ import org.springframework.stereotype.Component;
 import pl.bumbul.adventofcode.edition2019.ResourceLoader;
 import pl.bumbul.adventofcode.edition2019.Task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.IntSupplier;
+import java.util.function.UnaryOperator;
 
 @Component
 @Log4j2
@@ -16,9 +20,27 @@ public class Day03CrossedWires implements Task {
 
     private static final int FIRST_PATH = 1;
     private static final int SECOND_PATH = 2;
-    private ResourceLoader resourceLoader;
+    private static final Point STARTING_POINT = new Point(0, 0);
 
-    HashMap<String, Consumer<List<Point>>> consumers;
+    private final ResourceLoader resourceLoader;
+    private final Map<Character, UnaryOperator<Point>> nextPointConstructors = Map.of(
+            'U', Point::upperPoint,
+            'D', Point::lowerPoint,
+            'R', Point::rightPoint,
+            'L', Point::leftPoint
+    );
+    private List<Point> pathPoints = new ArrayList<>();
+    private final Consumer<Point> createPoint = point -> pathPoints.add(point);
+    private final Consumer<Point> crossOutPoint = point -> {
+        if (pathPoints.contains(point)) {
+            pathPoints.get(pathPoints.indexOf(point)).setCrossed(true);
+        }
+    };
+    private final IntSupplier getMinimalManhattanDistance = () -> pathPoints.stream()
+            .filter(Point::isCrossed)
+            .mapToInt(point -> Math.abs(point.getX()) + Math.abs(point.getY()))
+            .min()
+            .orElseThrow();
 
     @Getter
     Map<Integer, List<String>> paths;
@@ -31,92 +53,32 @@ public class Day03CrossedWires implements Task {
     public void execute() {
         initPaths();
         log.info("--- Day 3: Crossed Wires ---");
-        log.info("Stage 1 solution: {}", findMinimalDistance());
+        log.info("Stage 1 solution: {}", findMinimalManhattanDistance());
     }
 
     void initPaths() {
         paths = resourceLoader.loadFileWithInstructionsInEachRow("Day03CrossedWires.input");
     }
 
-    public Integer findMinimalDistance() {
-        Point currentPoint = new Point(0, 0, false);
-        List<Point> pathPoints = new ArrayList<>();
-        for (String direction : paths.get(FIRST_PATH)) {
-            var length = direction.substring(1);
-            switch (direction.charAt(0)) {
-                case 'U':
-                    for (int i = 0; i < Integer.parseInt(length); i++) {
-                        currentPoint = new Point(currentPoint.getX(), currentPoint.getY() + 1, false);
-                        pathPoints.add(currentPoint);
-                    }
-                    break;
-                case 'D':
-                    for (int i = 0; i < Integer.parseInt(length); i++) {
-                        currentPoint = new Point(currentPoint.getX(), currentPoint.getY() -1, false);
-                        pathPoints.add(currentPoint);
-                    }
-                    break;
-                case 'R':
-                    for (int i = 0; i < Integer.parseInt(length); i++) {
-                        currentPoint = new Point(currentPoint.getX() +1, currentPoint.getY(), false);
-                        pathPoints.add(currentPoint);
-                    }
-                    break;
-                case 'L':
-                    for (int i = 0; i < Integer.parseInt(length); i++) {
-                        currentPoint = new Point(currentPoint.getX() -1, currentPoint.getY(), false);
-                        pathPoints.add(currentPoint);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        currentPoint = new Point(0, 0, false);
-        for(String direction : paths.get(SECOND_PATH)){
-            var length = direction.substring(1);
-            switch (direction.charAt(0)) {
-                case 'U':
-                    for (int i = 0; i < Integer.parseInt(length); i++) {
-                        currentPoint = new Point(currentPoint.getX(), currentPoint.getY() + 1, false);
-                        if(pathPoints.contains(currentPoint)){
-                            pathPoints.get(pathPoints.indexOf(currentPoint)).setCrossed(true);
-                        }
-                    }
-                    break;
-                case 'D':
-                    for (int i = 0; i < Integer.parseInt(length); i++) {
-                        currentPoint = new Point(currentPoint.getX(), currentPoint.getY() -1, false);
-                        if(pathPoints.contains(currentPoint)){
-                            pathPoints.get(pathPoints.indexOf(currentPoint)).setCrossed(true);
-                        }                    }
-                    break;
-                case 'R':
-                    for (int i = 0; i < Integer.parseInt(length); i++) {
-                        currentPoint = new Point(currentPoint.getX() +1, currentPoint.getY(), false);
-                        if(pathPoints.contains(currentPoint)){
-                            pathPoints.get(pathPoints.indexOf(currentPoint)).setCrossed(true);
-                        }                    }
-                    break;
-                case 'L':
-                    for (int i = 0; i < Integer.parseInt(length); i++) {
-                        currentPoint = new Point(currentPoint.getX() -1, currentPoint.getY(), false);
-                        if(pathPoints.contains(currentPoint)){
-                            pathPoints.get(pathPoints.indexOf(currentPoint)).setCrossed(true);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        return pathPoints.stream()
-                .filter(Point::isCrossed)
-                .mapToInt(point -> Math.abs(point.getX())+Math.abs(point.getY()))
-                .min()
-                .orElseThrow();
+    public Integer findMinimalManhattanDistance() {
+        solutionStage(FIRST_PATH, createPoint);
+        solutionStage(SECOND_PATH, crossOutPoint);
+        return getMinimalManhattanDistance.getAsInt();
     }
 
+    private void solutionStage(int pathNumber, Consumer<Point> pointConsumer) {
+        Point currentPoint = STARTING_POINT;
+        int length;
+        UnaryOperator<Point> nextPoint;
+        for (String direction : paths.get(pathNumber)) {
+            length = Integer.parseInt(direction.substring(1));
+            nextPoint = nextPointConstructors.get(direction.charAt(0));
+            for (int i = 0; i < length; i++) {
+                currentPoint = nextPoint.apply(currentPoint);
+                pointConsumer.accept(currentPoint);
+            }
+        }
+    }
 
     @Data
     private static class Point {
@@ -124,10 +86,26 @@ public class Day03CrossedWires implements Task {
         private int y;
         private boolean crossed;
 
-        Point(int aX, int aY, boolean isCrossed) {
+        Point(int aX, int aY) {
             this.x = aX;
             this.y = aY;
-            this.crossed = isCrossed;
+            this.crossed = false;
+        }
+
+        Point rightPoint() {
+            return new Point(x + 1, y);
+        }
+
+        Point leftPoint() {
+            return new Point(x - 1, y);
+        }
+
+        Point upperPoint() {
+            return new Point(x, y + 1);
+        }
+
+        Point lowerPoint() {
+            return new Point(x, y - 1);
         }
     }
 }

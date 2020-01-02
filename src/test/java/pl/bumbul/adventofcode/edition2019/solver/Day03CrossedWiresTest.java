@@ -36,7 +36,7 @@ public class Day03CrossedWiresTest {
         tested.initPaths();
 
         // when
-        Integer actualDistance = tested.findMinimalDistance();
+        Integer actualDistance = tested.findMinimalManhattanDistance();
 
         // then
         assertEquals(expectedDistance, actualDistance);
@@ -55,7 +55,7 @@ public class Day03CrossedWiresTest {
         tested.initPaths();
 
         // when
-        Integer actualDistance = tested.findMinimalDistance();
+        Integer actualDistance = tested.findMinimalManhattanDistance();
 
         // then
         assertEquals(expectedDistance, actualDistance);
