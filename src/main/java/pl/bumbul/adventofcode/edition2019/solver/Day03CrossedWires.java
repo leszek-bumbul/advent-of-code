@@ -10,8 +10,9 @@ import pl.bumbul.adventofcode.edition2019.Task;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.Objects;
 import java.util.function.IntSupplier;
+import java.util.function.ObjIntConsumer;
 import java.util.function.UnaryOperator;
 
 @Component
@@ -30,15 +31,28 @@ public class Day03CrossedWires implements Task {
             'L', Point::leftPoint
     );
     private List<Point> pathPoints = new ArrayList<>();
-    private final Consumer<Point> createPoint = point -> pathPoints.add(point);
-    private final Consumer<Point> crossOutPoint = point -> {
+    private final ObjIntConsumer<Point> createPoint = (point, step) ->
+    {
+        point.setSteps(step);
+        pathPoints.add(point);
+    };
+    private final ObjIntConsumer<Point> crossOutPoint = (point, step) -> {
         if (pathPoints.contains(point)) {
-            pathPoints.get(pathPoints.indexOf(point)).setCrossed(true);
+            Point existingPoint = pathPoints.get(pathPoints.indexOf(point));
+            existingPoint.setCrossed(true);
+            existingPoint.addSteps(step);
         }
     };
-    private final IntSupplier getMinimalManhattanDistance = () -> pathPoints.stream()
+
+    final IntSupplier getMinimalManhattanDistance = () -> pathPoints.stream()
             .filter(Point::isCrossed)
             .mapToInt(point -> Math.abs(point.getX()) + Math.abs(point.getY()))
+            .min()
+            .orElseThrow();
+
+    final IntSupplier getMinimalStepsToNearestIntersection = () -> pathPoints.stream()
+            .filter(Point::isCrossed)
+            .mapToInt(Point::getSteps)
             .min()
             .orElseThrow();
 
@@ -51,31 +65,33 @@ public class Day03CrossedWires implements Task {
 
     @Override
     public void execute() {
-        initPaths();
+        loadResources();
         log.info("--- Day 3: Crossed Wires ---");
-        log.info("Stage 1 solution: {}", findMinimalManhattanDistance());
+        initPathPoints();
+        log.info("Stage 1 solution: {}", getMinimalManhattanDistance.getAsInt());
+        log.info("Stage 2 solution: {}", getMinimalStepsToNearestIntersection.getAsInt());
     }
 
-    void initPaths() {
+    void loadResources() {
         paths = resourceLoader.loadFileWithInstructionsInEachRow("Day03CrossedWires.input");
     }
 
-    public Integer findMinimalManhattanDistance() {
-        solutionStage(FIRST_PATH, createPoint);
-        solutionStage(SECOND_PATH, crossOutPoint);
-        return getMinimalManhattanDistance.getAsInt();
+    void initPathPoints() {
+        handlePath(FIRST_PATH, createPoint);
+        handlePath(SECOND_PATH, crossOutPoint);
     }
 
-    private void solutionStage(int pathNumber, Consumer<Point> pointConsumer) {
+    private void handlePath(int pathNumber, ObjIntConsumer<Point> pointConsumer) {
         Point currentPoint = STARTING_POINT;
         int length;
+        int step = 1;
         UnaryOperator<Point> nextPoint;
         for (String direction : paths.get(pathNumber)) {
             length = Integer.parseInt(direction.substring(1));
             nextPoint = nextPointConstructors.get(direction.charAt(0));
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; i < length; i++, step++) {
                 currentPoint = nextPoint.apply(currentPoint);
-                pointConsumer.accept(currentPoint);
+                pointConsumer.accept(currentPoint, step);
             }
         }
     }
@@ -85,6 +101,7 @@ public class Day03CrossedWires implements Task {
         private int x;
         private int y;
         private boolean crossed;
+        private int steps;
 
         Point(int aX, int aY) {
             this.x = aX;
@@ -106,6 +123,24 @@ public class Day03CrossedWires implements Task {
 
         Point lowerPoint() {
             return new Point(x, y - 1);
+        }
+
+        public void addSteps(int steps) {
+            this.steps += steps;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Point point = (Point) o;
+            return x == point.x &&
+                    y == point.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
         }
     }
 }
