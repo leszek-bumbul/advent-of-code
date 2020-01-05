@@ -1,22 +1,12 @@
 package pl.bumbul.adventofcode.edition2019.solver;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import pl.bumbul.adventofcode.edition2019.ResourceLoader;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
-@RunWith(MockitoJUnitRunner.class)
 public class Day04SecureContainerTest {
 
-    @Mock
-    ResourceLoader resourceLoader;
-
-    @InjectMocks
-    Day04SecureContainer tested;
+    Day04SecureContainer tested = new Day04SecureContainer();
 
     @Test
     public void testWrongNumberNoDoubleFound() {
@@ -41,6 +31,5 @@ public class Day04SecureContainerTest {
         // then
         assertFalse(result);
     }
-
 
 }

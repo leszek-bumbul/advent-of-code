@@ -17,12 +17,7 @@ import java.util.stream.LongStream;
 @Log4j2
 public class Day04SecureContainer implements Task {
 
-    private ResourceLoader resourceLoader;
     private LongStream range;
-
-    public Day04SecureContainer(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
 
     @Override
     public void execute() {
@@ -33,7 +28,7 @@ public class Day04SecureContainer implements Task {
     }
 
     void initiateRange() {
-        Long[] resource = resourceLoader.loadFileWithOneEntryPerRow("Day04SecureContainer.input").toArray(Long[]::new);
+        Long[] resource = ResourceLoader.loadFileWithOneEntryPerRow("Day04SecureContainer.input").toArray(Long[]::new);
         range = LongStream.rangeClosed(resource[0], resource[1]);
     }
 

@@ -11,12 +11,6 @@ import java.util.function.LongUnaryOperator;
 @Log4j2
 public class Day01TheTyrannyOfTheRocketEquation implements Task {
 
-    private ResourceLoader resourceLoader;
-
-    public Day01TheTyrannyOfTheRocketEquation(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
-
     @Override
     public void execute() {
         log.info("--- Day 1: The Tyranny of the Rocket Equation ---");
@@ -25,9 +19,9 @@ public class Day01TheTyrannyOfTheRocketEquation implements Task {
     }
 
     private Long solve(LongUnaryOperator algorithm) {
-        return resourceLoader.loadFileWithOneEntryPerRow("Day01TheTyrannyOfTheRocketEquation.input")
-                    .map(algorithm::applyAsLong)
-                    .reduce(0L, Long::sum);
+        return ResourceLoader.loadFileWithOneEntryPerRow("Day01TheTyrannyOfTheRocketEquation.input")
+                .map(algorithm::applyAsLong)
+                .reduce(0L, Long::sum);
     }
 
     LongUnaryOperator calculateRequiredFuel = mass -> ((long) Math.floor(1.0 * mass / 3)) - 2;

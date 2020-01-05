@@ -21,23 +21,18 @@ public class Day02The1202ProgramAlarm implements Task {
     private static final int PROGRAM_RESULT_ADDRESS = 0;
     private Map<Integer, ObjIntConsumer<ArrayList<Integer>>> instructions;
     private List<Integer> memory;
-    private ResourceLoader resourceLoader;
-
-    public Day02The1202ProgramAlarm(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-        setUpInstructions();
-    }
 
     @Override
     public void execute() {
-        initMemory();
+        init("Day02The1202ProgramAlarm.input");
         log.info("--- Day 2: 1202 Program Alarm ---");
         log.info("Stage 1 solution: {}", runIntcodeProgram(12, 2).get(PROGRAM_RESULT_ADDRESS));
         log.info("Stage 2 solution: {}", findNounAndVerb(19690720));
     }
 
-    void initMemory() {
-        memory = resourceLoader.loadFileWithEntriesSeparatedByPeriod("Day02The1202ProgramAlarm.input");
+    void init(String fileName) {
+        memory = ResourceLoader.loadFileWithEntriesSeparatedByPeriod(fileName);
+        setUpInstructions();
     }
 
     private Integer findNounAndVerb(Integer expected) {

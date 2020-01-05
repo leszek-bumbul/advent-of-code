@@ -1,22 +1,12 @@
 package pl.bumbul.adventofcode.edition2019.solver;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import pl.bumbul.adventofcode.edition2019.ResourceLoader;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(MockitoJUnitRunner.class)
 public class Day01TheTyrannyOfTheRocketEquationTest {
 
-    @Mock
-    private ResourceLoader resourceLoader;
-
-    @InjectMocks
-    private Day01TheTyrannyOfTheRocketEquation day01TheTyrannyOfTheRocketEquation;
+    private Day01TheTyrannyOfTheRocketEquation tested = new Day01TheTyrannyOfTheRocketEquation();
 
     @Test
     public void testFuelCounterUpper() {
@@ -35,10 +25,10 @@ public class Day01TheTyrannyOfTheRocketEquationTest {
     }
 
     private void assertFuelCounterUpper(long actualMass, long expectedFuel) {
-        assertEquals(expectedFuel, day01TheTyrannyOfTheRocketEquation.calculateRequiredFuel.applyAsLong(actualMass));
+        assertEquals(expectedFuel, tested.calculateRequiredFuel.applyAsLong(actualMass));
     }
 
     private void assertRocketEquationDoubleChecker(long actualMass, long expectedFuel) {
-        assertEquals(expectedFuel, day01TheTyrannyOfTheRocketEquation.calculateRequiredFuelWithItsMass(actualMass).longValue());
+        assertEquals(expectedFuel, tested.calculateRequiredFuelWithItsMass(actualMass).longValue());
     }
 }
