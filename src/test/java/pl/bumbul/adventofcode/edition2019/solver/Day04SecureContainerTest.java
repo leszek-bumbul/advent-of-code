@@ -35,16 +35,9 @@ public class Day04SecureContainerTest {
 
     @Test
     public void testWrongNumberWithGroupOfThreeDigits() {
-        // given
-        long inputNumber = 123444;
-
-        // when
-        boolean result = tested.filterOutPasswordsForSecondStage.test(inputNumber);
-
-        // then
-        assertFalse(result);
+        assertFalse(tested.filterOutPasswordsForSecondStage.test(123444));
         assertTrue(tested.filterOutPasswordsForSecondStage.test(112233));
-        //assertTrue(tested.filterOutPasswordsWithTriplets.test(111122));
+        assertTrue(tested.filterOutPasswordsForSecondStage.test(111122));
 
     }
 }
