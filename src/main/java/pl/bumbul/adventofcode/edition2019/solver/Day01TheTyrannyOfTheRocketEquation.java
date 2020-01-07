@@ -1,13 +1,11 @@
 package pl.bumbul.adventofcode.edition2019.solver;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Component;
 import pl.bumbul.adventofcode.edition2019.ResourceLoader;
 import pl.bumbul.adventofcode.edition2019.Task;
 
 import java.util.function.LongUnaryOperator;
 
-@Component
 @Log4j2
 public class Day01TheTyrannyOfTheRocketEquation implements Task {
 

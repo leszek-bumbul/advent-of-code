@@ -3,6 +3,7 @@ package pl.bumbul.adventofcode.edition2019.solver;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class Day04SecureContainerTest {
 
@@ -32,4 +33,18 @@ public class Day04SecureContainerTest {
         assertFalse(result);
     }
 
+    @Test
+    public void testWrongNumberWithGroupOfThreeDigits() {
+        // given
+        long inputNumber = 123444;
+
+        // when
+        boolean result = tested.filterOutPasswordsForSecondStage.test(inputNumber);
+
+        // then
+        assertFalse(result);
+        assertTrue(tested.filterOutPasswordsForSecondStage.test(112233));
+        //assertTrue(tested.filterOutPasswordsWithTriplets.test(111122));
+
+    }
 }

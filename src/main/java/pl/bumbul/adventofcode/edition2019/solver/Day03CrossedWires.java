@@ -2,7 +2,6 @@ package pl.bumbul.adventofcode.edition2019.solver;
 
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Component;
 import pl.bumbul.adventofcode.edition2019.ResourceLoader;
 import pl.bumbul.adventofcode.edition2019.Task;
 
@@ -11,15 +10,14 @@ import java.util.function.BiFunction;
 import java.util.function.IntSupplier;
 import java.util.stream.Collectors;
 
-@Component
 @Log4j2
 public class Day03CrossedWires implements Task {
 
     private static final int FIRST_WIRE = 1;
     private static final int SECOND_WIRE = 2;
     private static final Point STARTING_POINT = new Point(0, 0);
-    public static final String HORIZONTAL = "horizontal";
-    public static final String VERTICAL = "vertical";
+    private static final String HORIZONTAL = "horizontal";
+    private static final String VERTICAL = "vertical";
 
     private final Map<Character, BiFunction<Point, List<Integer>, Point>> endingPointConstructors = Map.of(
             'U', Point::upperPoint,
@@ -67,7 +65,7 @@ public class Day03CrossedWires implements Task {
 
     private void convertWireDirectionsToSections(int wireNumber, List<String> wireDirections) {
         int length;
-        int steps = 1;
+        int steps = 0;
         Point firstEndingOfASection = STARTING_POINT;
         BiFunction<Point, List<Integer>, Point> secondEndingOfASection;
         List<Section> wireSections = new LinkedList<>();
@@ -98,7 +96,9 @@ public class Day03CrossedWires implements Task {
                 verticalSectionEndings.get(0).getX() < Math.max(horizontalSectionEndings.get(0).getX(), horizontalSectionEndings.get(1).getX()) &&
                 horizontalSectionEndings.get(0).getY() > Math.min(verticalSectionEndings.get(0).getY(), verticalSectionEndings.get(1).getY()) &&
                 horizontalSectionEndings.get(0).getY() < Math.max(verticalSectionEndings.get(0).getY(), verticalSectionEndings.get(1).getY()))
-                ? Optional.of(new Point(verticalSectionEndings.get(0).getX(), horizontalSectionEndings.get(0).getY(), 0))
+                ? Optional.of(new Point(verticalSectionEndings.get(0).getX(), horizontalSectionEndings.get(0).getY(),
+                horizontalSectionEndings.get(0).getSteps() + Math.abs(verticalSectionEndings.get(0).getX() - horizontalSectionEndings.get(0).getX())
+                        + verticalSectionEndings.get(0).getSteps() + Math.abs(horizontalSectionEndings.get(0).getY() - verticalSectionEndings.get(0).getY())))
                 : Optional.empty();
     }
 

@@ -4,26 +4,39 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
 
 @Component
 @Log4j2
 public class Edition2019Runner {
 
-    private List<Task> taskList;
+    private ConfigrationLoader configrationLoader;
 
-    public Edition2019Runner(Task day01TheTyrannyOfTheRocketEquation, Task day02The1202ProgramAlarm, Task day03CrossedWires, Task day04SecureContainer) {
-        this.taskList = List.of(
-                day01TheTyrannyOfTheRocketEquation,
-                day02The1202ProgramAlarm,
-                day03CrossedWires,
-                day04SecureContainer
-        );
+    public Edition2019Runner(ConfigrationLoader configrationLoader) {
+        this.configrationLoader = configrationLoader;
     }
 
     @PostConstruct
     public void init() {
         log.info("Advent of code - edition 2019");
-        taskList.forEach(Task::execute);
+        configrationLoader.getTasks().forEach(task ->
+                {
+                    try {
+                        ((Task) Class.forName("pl.bumbul.adventofcode.edition2019.solver." + task)
+                                .getDeclaredConstructor()
+                                .newInstance()).execute();
+                    } catch (InstantiationException e) {
+                        log.error("Cannot be instantiated.", e);
+                    } catch (IllegalAccessException e) {
+                        log.error("Illegal access to the selected class", e);
+                    } catch (InvocationTargetException e) {
+                        log.error("Error! invocation target ", e);
+                    } catch (NoSuchMethodException e) {
+                        log.error("Method cannot be found", e);
+                    } catch (ClassNotFoundException e) {
+                        log.error("Class not found", e);
+                    }
+                }
+        );
     }
 }
