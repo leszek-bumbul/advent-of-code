@@ -1,52 +1,51 @@
 package pl.bumbul.adventofcode.edition2019.solver;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+class Day02The1202ProgramAlarmTest {
 
-public class Day02The1202ProgramAlarmTest {
-
-    private Day02The1202ProgramAlarm tested = new Day02The1202ProgramAlarm();
+    private Day02The1202ProgramAlarm tested;
 
     @Test
-    public void testAddition() {
+    void testAddition() {
         // given
         var expectedCodeStream = List.of(2, 0, 0, 0, 99);
-        tested.init("Day02The1202ProgramAlarmTest1.input");
+        tested = new Day02The1202ProgramAlarm("Day02The1202ProgramAlarmTest1.input");
 
         // when
         var actualMemory = tested.runIntcodeProgram(0, 0);
 
         // then
-        assertEquals(expectedCodeStream, actualMemory);
+        Assertions.assertEquals(expectedCodeStream, actualMemory);
     }
 
     @Test
-    public void testMultiplication() {
+    void testMultiplication() {
         // given
         var expectedCodeStream = List.of(2, 3, 0, 6, 99);
-        tested.init("Day02The1202ProgramAlarmTest2.input");
+        tested = new Day02The1202ProgramAlarm("Day02The1202ProgramAlarmTest2.input");
 
         // when
         var actualMemory = tested.runIntcodeProgram(3, 0);
 
         // then
-        assertEquals(expectedCodeStream, actualMemory);
+        Assertions.assertEquals(expectedCodeStream, actualMemory);
     }
 
     @Test
-    public void testAdditionWithMultiplication() {
+    void testAdditionWithMultiplication() {
         // given
         var expectedCodeStream = List.of(30, 1, 1, 4, 2, 5, 6, 0, 99);
-        tested.init("Day02The1202ProgramAlarmTest3.input");
+        tested = new Day02The1202ProgramAlarm("Day02The1202ProgramAlarmTest3.input");
 
         // when
         var actualMemory = tested.runIntcodeProgram(1, 1);
 
         // then
-        assertEquals(expectedCodeStream, actualMemory);
+        Assertions.assertEquals(expectedCodeStream, actualMemory);
     }
 
 }

@@ -1,8 +1,8 @@
 package pl.bumbul.adventofcode.edition2019.solver;
 
 import lombok.extern.log4j.Log4j2;
-import pl.bumbul.adventofcode.edition2019.ResourceLoader;
-import pl.bumbul.adventofcode.edition2019.Task;
+import pl.bumbul.adventofcode.commons.AdventDay;
+import pl.bumbul.adventofcode.commons.ResourceLoader;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,20 +14,19 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 @Log4j2
-public class Day04SecureContainer implements Task {
+public class Day04SecureContainer implements AdventDay {
 
-    private Long[] resource;
+    private long[] resource;
+
+    public Day04SecureContainer(String taskInput) {
+        resource = ResourceLoader.loadFileWithOneEntryPerRow(taskInput).mapToLong(Long::parseLong).toArray();
+    }
 
     @Override
-    public void execute() {
-        initiateRange();
+    public void solve() {
         log.info("--- Day 4: Secure Container ---");
         log.info("Stage 1 solution: {}", numberOfPasswords.get().count());
         log.info("Stage 2 solution: {}", numberOfPasswords.get().filter(filterOutPasswordsForSecondStage).count());//290
-    }
-
-    void initiateRange() {
-        resource = ResourceLoader.loadFileWithOneEntryPerRow("Day04SecureContainer.input").toArray(Long[]::new);
     }
 
     Predicate<List<Integer>> increasingDigits = digits -> IntStream.range(0, digits.size() - 1)
@@ -53,6 +52,6 @@ public class Day04SecureContainer implements Task {
     };
 
 
-    private Supplier<LongStream> numberOfPasswords = () -> LongStream.rangeClosed(resource[0], resource[1]).filter(verifyNumber);
+    private final Supplier<LongStream> numberOfPasswords = () -> LongStream.rangeClosed(resource[0], resource[1]).filter(verifyNumber);
 
 }

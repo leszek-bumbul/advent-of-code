@@ -1,4 +1,4 @@
-package pl.bumbul.adventofcode.edition2019;
+package pl.bumbul.adventofcode.commons;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -26,11 +26,11 @@ public class ResourceLoader {
         file.ifPresent(url -> path = Paths.get(url.getPath()));
     }
 
-    public static Stream<Long> loadFileWithOneEntryPerRow(String fileName) {
+    public static Stream<String> loadFileWithOneEntryPerRow(String fileName){
         loadFile(fileName);
-        Stream<Long> result = Stream.empty();
-        try {
-            result = Files.readAllLines(path).stream().map(Long::parseLong);
+        Stream<String> result = Stream.empty();
+        try{
+            result = Files.readAllLines(path).stream();
         } catch (IOException e) {
             log.error(FILE_NOT_FOUND, e);
         }

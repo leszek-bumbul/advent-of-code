@@ -2,8 +2,8 @@ package pl.bumbul.adventofcode.edition2019.solver;
 
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
-import pl.bumbul.adventofcode.edition2019.ResourceLoader;
-import pl.bumbul.adventofcode.edition2019.Task;
+import pl.bumbul.adventofcode.commons.AdventDay;
+import pl.bumbul.adventofcode.commons.ResourceLoader;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -11,7 +11,7 @@ import java.util.function.IntSupplier;
 import java.util.stream.Collectors;
 
 @Log4j2
-public class Day03CrossedWires implements Task {
+public class Day03CrossedWires implements AdventDay {
 
     private static final int FIRST_WIRE = 1;
     private static final int SECOND_WIRE = 2;
@@ -26,32 +26,30 @@ public class Day03CrossedWires implements Task {
             'L', Point::leftPoint
     );
 
-    private Map<Integer, List<Section>> wires = new HashMap<>();
-    private List<Point> crossingPoints = new LinkedList<>();
+    private final Map<Integer, List<Section>> wires = new HashMap<>();
+    private final List<Point> crossingPoints = new LinkedList<>();
 
+    public Day03CrossedWires(String taskInput){
+        Map<Integer, List<String>> wiresInput = ResourceLoader.loadFileWithInstructionsInEachRow(taskInput);
+        wiresInput.forEach(this::convertWireDirectionsToSections);
+        findCrossingPoints();
+    }
 
-    final IntSupplier getMinimalManhattanDistance = () -> crossingPoints.stream()
+    final IntSupplier minimalManhattanDistanceSupplier = () -> crossingPoints.stream()
             .mapToInt(point -> Math.abs(point.getX()) + Math.abs(point.getY()))
             .min()
             .orElseThrow();
 
-    final IntSupplier getMinimalStepsToNearestIntersection = () -> crossingPoints.stream()
+    final IntSupplier minimalStepsToNearestIntersectionSupplier = () -> crossingPoints.stream()
             .mapToInt(Point::getSteps)
             .min()
             .orElseThrow();
 
     @Override
-    public void execute() {
-        init("Day03CrossedWires.input");
+    public void solve() {
         log.info("--- Day 3: Crossed Wires ---");
-        log.info("Stage 1 solution: {}", getMinimalManhattanDistance.getAsInt());
-        log.info("Stage 2 solution: {}", getMinimalStepsToNearestIntersection.getAsInt());
-    }
-
-    void init(String fileName) {
-        Map<Integer, List<String>> wiresInput = ResourceLoader.loadFileWithInstructionsInEachRow(fileName);
-        wiresInput.forEach(this::convertWireDirectionsToSections);
-        findCrossingPoints();
+        log.info("Stage 1 solution: {}", minimalManhattanDistanceSupplier.getAsInt());
+        log.info("Stage 2 solution: {}", minimalStepsToNearestIntersectionSupplier.getAsInt());
     }
 
     private void findCrossingPoints() {

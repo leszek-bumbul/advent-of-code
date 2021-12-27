@@ -1,34 +1,42 @@
 package pl.bumbul.adventofcode.edition2019.solver;
 
 import lombok.extern.log4j.Log4j2;
-import pl.bumbul.adventofcode.edition2019.ResourceLoader;
-import pl.bumbul.adventofcode.edition2019.Task;
+import pl.bumbul.adventofcode.commons.AdventDay;
+import pl.bumbul.adventofcode.commons.ResourceLoader;
 
 import java.util.function.LongUnaryOperator;
+import java.util.stream.Stream;
 
 @Log4j2
-public class Day01TheTyrannyOfTheRocketEquation implements Task {
+public class Day01TheTyrannyOfTheRocketEquation implements AdventDay {
 
-    @Override
-    public void execute() {
-        log.info("--- Day 1: The Tyranny of the Rocket Equation ---");
-        log.info("Stage 1 solution: {}", solve(calculateRequiredFuel));
-        log.info("Stage 2 solution: {}", solve(this::calculateRequiredFuelWithItsMass));
+    private final String taskInput;
+
+    public Day01TheTyrannyOfTheRocketEquation(String taskInput) {
+        this.taskInput = taskInput;
     }
 
-    private Long solve(LongUnaryOperator algorithm) {
-        return ResourceLoader.loadFileWithOneEntryPerRow("Day01TheTyrannyOfTheRocketEquation.input")
-                .map(algorithm::applyAsLong)
+    @Override
+    public void solve() {
+        log.info("--- Day 1: The Tyranny of the Rocket Equation ---");
+        log.info("Stage 1 solution: {}", calculate(requiredFuel));
+        log.info("Stage 2 solution: {}", calculate(this::calculateRequiredFuelWithItsMass));
+    }
+
+    LongUnaryOperator requiredFuel = mass -> ((long) Math.floor(1.0 * mass / 3)) - 2;
+
+    private Long calculate(LongUnaryOperator algorithm) {
+        return ResourceLoader.loadFileWithOneEntryPerRow(taskInput)
+                .mapToLong(Long::parseLong)
+                .map(algorithm)
                 .reduce(0L, Long::sum);
     }
 
-    LongUnaryOperator calculateRequiredFuel = mass -> ((long) Math.floor(1.0 * mass / 3)) - 2;
-
     Long calculateRequiredFuelWithItsMass(long mass) {
-        var requiredFuel = calculateRequiredFuel.applyAsLong(mass);
-        if (requiredFuel <= 0L) {
+        var fuel = requiredFuel.applyAsLong(mass);
+        if (fuel <= 0L) {
             return 0L;
         }
-        return requiredFuel + calculateRequiredFuelWithItsMass(requiredFuel);
+        return fuel + calculateRequiredFuelWithItsMass(fuel);
     }
 }

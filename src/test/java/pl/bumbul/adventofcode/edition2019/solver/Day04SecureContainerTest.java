@@ -1,16 +1,14 @@
 package pl.bumbul.adventofcode.edition2019.solver;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+class Day04SecureContainerTest {
 
-public class Day04SecureContainerTest {
-
-    Day04SecureContainer tested = new Day04SecureContainer();
+    private final Day04SecureContainer tested = new Day04SecureContainer(null);
 
     @Test
-    public void testWrongNumberNoDoubleFound() {
+    void testWrongNumberNoDoubleFound() {
         // given
         long inputNumber = 123789;
 
@@ -18,11 +16,11 @@ public class Day04SecureContainerTest {
         boolean result = tested.verifyNumber.test(inputNumber);
 
         //then
-        assertFalse(result);
+        Assertions.assertFalse(result);
     }
 
     @Test
-    public void testWrongNumberDecreasingPairOfDigitsFound() {
+    void testWrongNumberDecreasingPairOfDigitsFound() {
         // given
         long inputNumber = 223450;
 
@@ -30,14 +28,14 @@ public class Day04SecureContainerTest {
         boolean result = tested.verifyNumber.test(inputNumber);
 
         // then
-        assertFalse(result);
+        Assertions.assertFalse(result);
     }
 
     @Test
-    public void testWrongNumberWithGroupOfThreeDigits() {
-        assertFalse(tested.filterOutPasswordsForSecondStage.test(123444));
-        assertTrue(tested.filterOutPasswordsForSecondStage.test(112233));
-        assertTrue(tested.filterOutPasswordsForSecondStage.test(111122));
+    void testWrongNumberWithGroupOfThreeDigits() {
+        Assertions.assertFalse(tested.filterOutPasswordsForSecondStage.test(123444));
+        Assertions.assertTrue(tested.filterOutPasswordsForSecondStage.test(112233));
+        Assertions.assertTrue(tested.filterOutPasswordsForSecondStage.test(111122));
 
     }
 }

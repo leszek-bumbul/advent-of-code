@@ -1,42 +1,41 @@
 package pl.bumbul.adventofcode.edition2019.solver;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+class Day03CrossedWiresTest {
 
-public class Day03CrossedWiresTest {
-
-    Day03CrossedWires tested = new Day03CrossedWires();
+    private Day03CrossedWires tested;
 
     @Test
-    public void testFirstSetOfPaths() {
+    void testFirstSetOfPaths() {
         // given
         Integer expectedDistance = 159;
         Integer expectedSteps = 610;
-        tested.init("Day03CrossedWiresTest1.input");
+        tested = new Day03CrossedWires("Day03CrossedWiresTest1.input");
 
         // when
-        Integer actualDistance = tested.getMinimalManhattanDistance.getAsInt();
-        Integer actualSteps = tested.getMinimalStepsToNearestIntersection.getAsInt();
+        Integer actualDistance = tested.minimalManhattanDistanceSupplier.getAsInt();
+        Integer actualSteps = tested.minimalStepsToNearestIntersectionSupplier.getAsInt();
 
         // then
-        assertEquals(expectedDistance, actualDistance);
-        assertEquals(expectedSteps, actualSteps);
+        Assertions.assertEquals(expectedDistance, actualDistance);
+        Assertions.assertEquals(expectedSteps, actualSteps);
     }
 
     @Test
-    public void testSecondSetOfPaths() {
+    void testSecondSetOfPaths() {
         // given
         Integer expectedDistance = 135;
         Integer expectedSteps = 410;
-        tested.init("Day03CrossedWiresTest2.input");
+        tested = new Day03CrossedWires("Day03CrossedWiresTest2.input");
 
         // when
-        Integer actualDistance = tested.getMinimalManhattanDistance.getAsInt();
-        Integer actualSteps = tested.getMinimalStepsToNearestIntersection.getAsInt();
+        Integer actualDistance = tested.minimalManhattanDistanceSupplier.getAsInt();
+        Integer actualSteps = tested.minimalStepsToNearestIntersectionSupplier.getAsInt();
 
         // then
-        assertEquals(expectedDistance, actualDistance);
-        assertEquals(expectedSteps, actualSteps);
+        Assertions.assertEquals(expectedDistance, actualDistance);
+        Assertions.assertEquals(expectedSteps, actualSteps);
     }
 }

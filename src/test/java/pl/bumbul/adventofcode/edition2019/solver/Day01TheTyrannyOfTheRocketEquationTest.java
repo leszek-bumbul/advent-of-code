@@ -1,15 +1,14 @@
 package pl.bumbul.adventofcode.edition2019.solver;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+class Day01TheTyrannyOfTheRocketEquationTest {
 
-public class Day01TheTyrannyOfTheRocketEquationTest {
-
-    private Day01TheTyrannyOfTheRocketEquation tested = new Day01TheTyrannyOfTheRocketEquation();
+    private final Day01TheTyrannyOfTheRocketEquation tested = new Day01TheTyrannyOfTheRocketEquation(null);
 
     @Test
-    public void testFuelCounterUpper() {
+    void testFuelCounterUpper() {
         assertFuelCounterUpper(12, 2);
         assertFuelCounterUpper(14, 2);
         assertFuelCounterUpper(1969, 654);
@@ -17,7 +16,7 @@ public class Day01TheTyrannyOfTheRocketEquationTest {
     }
 
     @Test
-    public void testRocketEquationDoubleChecker() {
+    void testRocketEquationDoubleChecker() {
         assertRocketEquationDoubleChecker(12, 2);
         assertRocketEquationDoubleChecker(14, 2);
         assertRocketEquationDoubleChecker(1969, 966);
@@ -25,10 +24,10 @@ public class Day01TheTyrannyOfTheRocketEquationTest {
     }
 
     private void assertFuelCounterUpper(long actualMass, long expectedFuel) {
-        assertEquals(expectedFuel, tested.calculateRequiredFuel.applyAsLong(actualMass));
+        Assertions.assertEquals(expectedFuel, tested.requiredFuel.applyAsLong(actualMass));
     }
 
     private void assertRocketEquationDoubleChecker(long actualMass, long expectedFuel) {
-        assertEquals(expectedFuel, tested.calculateRequiredFuelWithItsMass(actualMass).longValue());
+        Assertions.assertEquals(expectedFuel, tested.calculateRequiredFuelWithItsMass(actualMass).longValue());
     }
 }

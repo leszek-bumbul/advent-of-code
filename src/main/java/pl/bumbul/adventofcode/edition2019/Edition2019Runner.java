@@ -1,42 +1,34 @@
 package pl.bumbul.adventofcode.edition2019;
 
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
+import pl.bumbul.adventofcode.commons.AdventDay;
+import pl.bumbul.adventofcode.commons.EditionRunner;
+import pl.bumbul.adventofcode.edition2019.solver.Day01TheTyrannyOfTheRocketEquation;
+import pl.bumbul.adventofcode.edition2019.solver.Day02The1202ProgramAlarm;
+import pl.bumbul.adventofcode.edition2019.solver.Day03CrossedWires;
+import pl.bumbul.adventofcode.edition2019.solver.Day04SecureContainer;
 
 import javax.annotation.PostConstruct;
-import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 @Component
 @Log4j2
-public class Edition2019Runner {
+@NoArgsConstructor
+public class Edition2019Runner implements EditionRunner {
 
-    private ConfigrationLoader configrationLoader;
+    private final List<AdventDay> tasks = List.of(
+            new Day01TheTyrannyOfTheRocketEquation("edition/2019/Day01TheTyrannyOfTheRocketEquation.input"),
+            new Day02The1202ProgramAlarm("edition/2019/Day02The1202ProgramAlarm.input"),
+            new Day03CrossedWires("edition/2019/Day03CrossedWires.input"),
+            new Day04SecureContainer("edition/2019/Day04SecureContainer.input")
+    );
 
-    public Edition2019Runner(ConfigrationLoader configrationLoader) {
-        this.configrationLoader = configrationLoader;
-    }
-
-    @PostConstruct
-    public void init() {
+    @Override
+    public void run() {
         log.info("Advent of code - edition 2019");
-        configrationLoader.getTasks().forEach(task ->
-                {
-                    try {
-                        ((Task) Class.forName("pl.bumbul.adventofcode.edition2019.solver." + task)
-                                .getDeclaredConstructor()
-                                .newInstance()).execute();
-                    } catch (InstantiationException e) {
-                        log.error("Cannot be instantiated.", e);
-                    } catch (IllegalAccessException e) {
-                        log.error("Illegal access to the selected class", e);
-                    } catch (InvocationTargetException e) {
-                        log.error("Error! invocation target ", e);
-                    } catch (NoSuchMethodException e) {
-                        log.error("Method cannot be found", e);
-                    } catch (ClassNotFoundException e) {
-                        log.error("Class not found", e);
-                    }
-                }
-        );
+        tasks.forEach(AdventDay::solve);
     }
 }

@@ -1,8 +1,8 @@
 package pl.bumbul.adventofcode.edition2019.solver;
 
 import lombok.extern.log4j.Log4j2;
-import pl.bumbul.adventofcode.edition2019.ResourceLoader;
-import pl.bumbul.adventofcode.edition2019.Task;
+import pl.bumbul.adventofcode.commons.AdventDay;
+import pl.bumbul.adventofcode.commons.ResourceLoader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,26 +11,26 @@ import java.util.Map;
 import java.util.function.ObjIntConsumer;
 
 @Log4j2
-public class Day02The1202ProgramAlarm implements Task {
+public class Day02The1202ProgramAlarm implements AdventDay {
 
     private static final Integer OPCODE_STOP_PROGRAM = 99;
     private static final int NOUN = 1;
     private static final int VERB = 2;
     private static final int PROGRAM_RESULT_ADDRESS = 0;
+
     private Map<Integer, ObjIntConsumer<ArrayList<Integer>>> instructions;
     private List<Integer> memory;
 
+    public Day02The1202ProgramAlarm(String taskInput){
+        memory = ResourceLoader.loadFileWithEntriesSeparatedByPeriod(taskInput);
+        setUpInstructions();
+    }
+
     @Override
-    public void execute() {
-        init("Day02The1202ProgramAlarm.input");
+    public void solve() {
         log.info("--- Day 2: 1202 Program Alarm ---");
         log.info("Stage 1 solution: {}", runIntcodeProgram(12, 2).get(PROGRAM_RESULT_ADDRESS));
         log.info("Stage 2 solution: {}", findNounAndVerb(19690720));
-    }
-
-    void init(String fileName) {
-        memory = ResourceLoader.loadFileWithEntriesSeparatedByPeriod(fileName);
-        setUpInstructions();
     }
 
     private Integer findNounAndVerb(Integer expected) {
