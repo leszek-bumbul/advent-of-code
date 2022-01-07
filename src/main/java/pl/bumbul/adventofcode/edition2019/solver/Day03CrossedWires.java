@@ -29,8 +29,11 @@ public class Day03CrossedWires implements AdventDay {
     private final Map<Integer, List<Section>> wires = new HashMap<>();
     private final List<Point> crossingPoints = new LinkedList<>();
 
-    public Day03CrossedWires(String taskInput){
-        Map<Integer, List<String>> wiresInput = ResourceLoader.loadFileWithInstructionsInEachRow(taskInput);
+    public Day03CrossedWires(String taskInput) {
+        List<String> extractedData = ResourceLoader.loadFileWithOneEntryPerRow(taskInput, ResourceLoader.extractData).collect(Collectors.toList());
+        Map<Integer, List<String>> wiresInput = Map.of(
+                1, Arrays.asList(extractedData.get(0).split(",", 0)),
+                2, Arrays.asList(extractedData.get(1).split(",",0)));
         wiresInput.forEach(this::convertWireDirectionsToSections);
         findCrossingPoints();
     }

@@ -13,7 +13,7 @@ public class Day01SonarSweep implements AdventDay {
     private final List<Integer> depthSamples;
 
     public Day01SonarSweep(String taskInput){
-        depthSamples = ResourceLoader.loadFileWithOneEntryPerRow(taskInput)
+        depthSamples = ResourceLoader.loadFileWithOneEntryPerRow(taskInput, ResourceLoader.extractData)
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
     }

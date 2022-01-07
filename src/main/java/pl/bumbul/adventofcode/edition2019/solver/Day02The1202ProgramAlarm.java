@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.ObjIntConsumer;
+import java.util.stream.Collectors;
 
 @Log4j2
 public class Day02The1202ProgramAlarm implements AdventDay {
@@ -19,10 +20,11 @@ public class Day02The1202ProgramAlarm implements AdventDay {
     private static final int PROGRAM_RESULT_ADDRESS = 0;
 
     private Map<Integer, ObjIntConsumer<ArrayList<Integer>>> instructions;
-    private List<Integer> memory;
+    private final List<Integer> memory;
 
-    public Day02The1202ProgramAlarm(String taskInput){
-        memory = ResourceLoader.loadFileWithEntriesSeparatedByPeriod(taskInput);
+    public Day02The1202ProgramAlarm(String taskInput) {
+        memory = ResourceLoader.loadFileWithOneEntryPerRow(taskInput, ResourceLoader.extractDataSeparatedByPeriod)
+                .map(Integer::parseInt).collect(Collectors.toList());
         setUpInstructions();
     }
 

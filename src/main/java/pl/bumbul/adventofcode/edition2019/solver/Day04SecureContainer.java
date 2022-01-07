@@ -19,7 +19,7 @@ public class Day04SecureContainer implements AdventDay {
     private long[] resource;
 
     public Day04SecureContainer(String taskInput) {
-        resource = ResourceLoader.loadFileWithOneEntryPerRow(taskInput).mapToLong(Long::parseLong).toArray();
+        resource = ResourceLoader.loadFileWithOneEntryPerRow(taskInput, ResourceLoader.extractData).mapToLong(Long::parseLong).toArray();
     }
 
     @Override

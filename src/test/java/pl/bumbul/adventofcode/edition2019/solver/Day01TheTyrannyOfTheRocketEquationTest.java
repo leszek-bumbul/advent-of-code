@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 class Day01TheTyrannyOfTheRocketEquationTest {
 
-    private final Day01TheTyrannyOfTheRocketEquation tested = new Day01TheTyrannyOfTheRocketEquation(null);
+    private final Day01TheTyrannyOfTheRocketEquation tested = new Day01TheTyrannyOfTheRocketEquation("2019/Day01TheTyrannyOfTheRocketEquation.input");
 
     @Test
     void testFuelCounterUpper() {

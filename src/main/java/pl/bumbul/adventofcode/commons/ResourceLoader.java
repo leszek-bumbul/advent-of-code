@@ -7,8 +7,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 @Log4j2
@@ -18,47 +19,32 @@ public class ResourceLoader {
         throw new AssertionError();
     }
 
-    private static final String FILE_NOT_FOUND = "File not found";
-    private static Path path;
+    public static final String FILE_NOT_FOUND = "File not found";
 
-    private static void loadFile(String fileName) {
-        Optional<URL> file = Optional.ofNullable(ClassLoader.getSystemResource(fileName));
-        file.ifPresent(url -> path = Paths.get(url.getPath()));
-    }
-
-    public static Stream<String> loadFileWithOneEntryPerRow(String fileName){
-        loadFile(fileName);
-        Stream<String> result = Stream.empty();
-        try{
-            result = Files.readAllLines(path).stream();
-        } catch (IOException e) {
-            log.error(FILE_NOT_FOUND, e);
+    public static Stream<String> loadFileWithOneEntryPerRow(String fileName, Function<Path, Stream<String>> pathConverter) {
+        Optional<URL> systemResource = Optional.ofNullable(ClassLoader.getSystemResource(fileName));
+        if (systemResource.isEmpty()) {
+            return Stream.empty();
         }
-        return result;
+        return pathConverter.apply(Paths.get(systemResource.get().getPath()));
     }
 
-    public static List<Integer> loadFileWithEntriesSeparatedByPeriod(String fileName) {
-        loadFile(fileName);
-        List<Integer> result = new ArrayList<>();
+    public static final Function<Path, Stream<String>> extractData = path -> {
         try {
-            result = Arrays.stream(String.join(",", Files.readAllLines(path)).split(",", 0))
-                    .map(Integer::parseInt)
-                    .collect(Collectors.toList());
+            return Files.readAllLines(path).stream();
         } catch (IOException e) {
             log.error(FILE_NOT_FOUND, e);
         }
-        return result;
-    }
+        return Stream.empty();
+    };
 
-    public static Map<Integer, List<String>> loadFileWithInstructionsInEachRow(String fileName) {
-        loadFile(fileName);
-        Map<Integer, List<String>> result = new HashMap<>();
+    public static final Function<Path, Stream<String>> extractDataSeparatedByPeriod = path -> {
         try {
-            result.put(1, Arrays.asList(Files.readAllLines(path).get(0).split(",", 0)));
-            result.put(2, Arrays.asList(Files.readAllLines(path).get(1).split(",", 0)));
+            return Arrays.stream(String.join(",", Files.readAllLines(path)).split(",", 0));
         } catch (IOException e) {
             log.error(FILE_NOT_FOUND, e);
         }
-        return result;
-    }
+        return Stream.empty();
+    };
+
 }

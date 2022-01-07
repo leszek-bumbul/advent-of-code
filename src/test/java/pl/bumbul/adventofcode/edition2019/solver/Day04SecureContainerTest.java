@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 class Day04SecureContainerTest {
 
-    private final Day04SecureContainer tested = new Day04SecureContainer(null);
+    private final Day04SecureContainer tested = new Day04SecureContainer("2019/Day04SecureContainer.input");
 
     @Test
     void testWrongNumberNoDoubleFound() {

@@ -4,16 +4,18 @@ import lombok.extern.log4j.Log4j2;
 import pl.bumbul.adventofcode.commons.AdventDay;
 import pl.bumbul.adventofcode.commons.ResourceLoader;
 
+import java.util.List;
 import java.util.function.LongUnaryOperator;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 @Log4j2
 public class Day01TheTyrannyOfTheRocketEquation implements AdventDay {
 
-    private final String taskInput;
+    private final List<Long> dataSamples;
 
     public Day01TheTyrannyOfTheRocketEquation(String taskInput) {
-        this.taskInput = taskInput;
+        dataSamples = ResourceLoader.loadFileWithOneEntryPerRow(taskInput, ResourceLoader.extractData)
+                .map(Long::parseLong).collect(Collectors.toList());
     }
 
     @Override
@@ -25,10 +27,8 @@ public class Day01TheTyrannyOfTheRocketEquation implements AdventDay {
 
     LongUnaryOperator requiredFuel = mass -> ((long) Math.floor(1.0 * mass / 3)) - 2;
 
-    private Long calculate(LongUnaryOperator algorithm) {
-        return ResourceLoader.loadFileWithOneEntryPerRow(taskInput)
-                .mapToLong(Long::parseLong)
-                .map(algorithm)
+    Long calculate(LongUnaryOperator algorithm) {
+        return dataSamples.stream().mapToLong(Long::longValue).map(algorithm)
                 .reduce(0L, Long::sum);
     }
 

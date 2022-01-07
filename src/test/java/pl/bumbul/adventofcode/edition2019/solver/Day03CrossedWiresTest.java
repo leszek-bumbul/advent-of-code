@@ -12,7 +12,7 @@ class Day03CrossedWiresTest {
         // given
         Integer expectedDistance = 159;
         Integer expectedSteps = 610;
-        tested = new Day03CrossedWires("Day03CrossedWiresTest1.input");
+        tested = new Day03CrossedWires("2019/Day03CrossedWiresTest1.input");
 
         // when
         Integer actualDistance = tested.minimalManhattanDistanceSupplier.getAsInt();
@@ -28,7 +28,7 @@ class Day03CrossedWiresTest {
         // given
         Integer expectedDistance = 135;
         Integer expectedSteps = 410;
-        tested = new Day03CrossedWires("Day03CrossedWiresTest2.input");
+        tested = new Day03CrossedWires("2019/Day03CrossedWiresTest2.input");
 
         // when
         Integer actualDistance = tested.minimalManhattanDistanceSupplier.getAsInt();

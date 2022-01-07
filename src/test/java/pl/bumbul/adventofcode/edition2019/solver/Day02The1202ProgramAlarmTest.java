@@ -13,7 +13,7 @@ class Day02The1202ProgramAlarmTest {
     void testAddition() {
         // given
         var expectedCodeStream = List.of(2, 0, 0, 0, 99);
-        tested = new Day02The1202ProgramAlarm("Day02The1202ProgramAlarmTest1.input");
+        tested = new Day02The1202ProgramAlarm("2019/Day02The1202ProgramAlarmTest1.input");
 
         // when
         var actualMemory = tested.runIntcodeProgram(0, 0);
@@ -26,7 +26,7 @@ class Day02The1202ProgramAlarmTest {
     void testMultiplication() {
         // given
         var expectedCodeStream = List.of(2, 3, 0, 6, 99);
-        tested = new Day02The1202ProgramAlarm("Day02The1202ProgramAlarmTest2.input");
+        tested = new Day02The1202ProgramAlarm("2019/Day02The1202ProgramAlarmTest2.input");
 
         // when
         var actualMemory = tested.runIntcodeProgram(3, 0);
@@ -39,7 +39,7 @@ class Day02The1202ProgramAlarmTest {
     void testAdditionWithMultiplication() {
         // given
         var expectedCodeStream = List.of(30, 1, 1, 4, 2, 5, 6, 0, 99);
-        tested = new Day02The1202ProgramAlarm("Day02The1202ProgramAlarmTest3.input");
+        tested = new Day02The1202ProgramAlarm("2019/Day02The1202ProgramAlarmTest3.input");
 
         // when
         var actualMemory = tested.runIntcodeProgram(1, 1);
